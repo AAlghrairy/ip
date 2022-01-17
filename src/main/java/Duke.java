@@ -8,9 +8,13 @@ import java.util.Scanner;
  * @author Abdulelah Faisal S Al Ghrairy
  */
 public class Duke {
-    /** contains a list of tasks stored for the user */
+    /**
+     * contains a list of tasks stored for the user
+     */
     private static List<Task> tasks;
-    /** A divider for design purposes*/
+    /**
+     * A divider for design purposes
+     */
     public static final String DIVIDER = "\n____________________________________________________________\n";
 
     public static void main(String[] args) {
@@ -18,7 +22,7 @@ public class Duke {
         tasks = new ArrayList<>();
         String userInput = "";
 
-        System.out.println(DIVIDER + "Why hello there! My name is Wensleydale\nWhat do you need?" + DIVIDER);
+        System.out.println(DIVIDER + "Why hello there! My name is Wensleydale.\nWhat do you need?" + DIVIDER);
 
         while (!userInput.equals("bye")) {
             userInput = sc.nextLine();
@@ -78,6 +82,11 @@ public class Duke {
 
             message = "Alright then! I've marked that task as not done:" + "\n\t" + currTask;
             break;
+        case "delete":
+            index = getIndexFromMessage(message);
+
+            message = confirmDeletion(tasks.remove(index));
+            break;
         case "todo":
             currTask = new Todo(retrieveMessageTodo(message));
 
@@ -100,8 +109,26 @@ public class Duke {
         return DIVIDER + message + DIVIDER;
     }
 
-    private static int getIndexFromMessage(String message) {
-        return Integer.parseInt(message.substring(message.indexOf(" ") + 1)) - 1;
+    private static int getIndexFromMessage(String message) throws DukeException {
+        int index = message.indexOf(" ");
+
+        if (index == -1) {
+            throw new DukeException("Pardon me, but the index cannot be empty.");
+        }
+
+        int indexOfItem;
+        try {
+            indexOfItem = Integer.parseInt(message.substring(message.indexOf(" ") + 1)) - 1;
+        } catch (NumberFormatException e) {
+            throw new DukeException("Pardon me, but the provided index was not an integer.");
+        }
+
+        try {
+            tasks.get(indexOfItem);
+        } catch (IndexOutOfBoundsException e) {
+            throw new DukeException("Pardon me, but the provided index does not exist in your list.");
+        }
+        return indexOfItem;
     }
 
     private static String retrieveMessageTodo(String message) throws DukeException {
@@ -135,7 +162,11 @@ public class Duke {
 
     private static String confirmAddition(Task task) {
         return "Alright then! I've added the task to your list:" + "\n\t" + task.toString() + viewTasksCount();
+    }
 
+    private static String confirmDeletion(Task task) {
+        return "As you wish. I've removed the task from your list:" + "\n\t" + task.toString()
+                + "\nI hope it was nothing important..." + viewTasksCount();
     }
 
     private static String viewTasksCount() {

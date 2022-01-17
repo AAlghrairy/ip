@@ -1,6 +1,6 @@
 
 ____________________________________________________________
-Why hello there! My name is Wensleydale
+Why hello there! My name is Wensleydale.
 What do you need?
 ____________________________________________________________
 
@@ -57,6 +57,24 @@ ____________________________________________________________
 
 ____________________________________________________________
 Pardon me, but I did not understand what you said.
+____________________________________________________________
+
+
+____________________________________________________________
+As you wish. I've removed the task from your list:
+	[T][ ] borrow book
+I hope it was nothing important...
+You currently have 3 task(s) remaining in your list.
+____________________________________________________________
+
+
+____________________________________________________________
+Pardon me, but the provided index does not exist in your list.
+____________________________________________________________
+
+
+____________________________________________________________
+Pardon me, but the provided index was not an integer.
 ____________________________________________________________
 
 
