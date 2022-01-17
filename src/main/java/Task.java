@@ -1,6 +1,6 @@
 /**
- * Represents a task to be completed. Includes a description of the task and a boolean representing whether it has been
- * completed
+ * Represents a task to be completed. Includes a description of the task and a boolean representing
+ * whether it has been completed.
  *
  * @author Abdulelah Faisal S Al Ghrairy
  */
@@ -9,7 +9,7 @@ public class Task {
     protected boolean isDone;
 
     /**
-     * Constructor for task class
+     * Constructor for Task class
      * @param d a string representing a description of the task
      */
     public Task(String d) {

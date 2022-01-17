@@ -63,14 +63,14 @@ public class Duke {
             currTask = tasks.get(index);
             currTask.markDone();
 
-            message = "Alright then! I've marked that task as done: " + "\n\t" + currTask.toString();
+            message = "Alright then! I've marked that task as done:" + "\n\t" + currTask.toString();
             break;
         case "unmark":
             index = getIndexFromMessage(message); //get the index
             currTask = tasks.get(index);
             currTask.markUndone();
 
-            message = "Alright then! I've marked that task as not done: " + "\n\t" + currTask.toString();
+            message = "Alright then! I've marked that task as not done:" + "\n\t" + currTask.toString();
             break;
         case "todo":
             currTask = new Todo(message.substring(message.indexOf(" ") + 1));
@@ -106,7 +106,7 @@ public class Duke {
     }
 
     private static String confirmAddition(Task task) {
-        return "Alright then! I've added the task to your list: " + "\n\t" + task.toString() + viewTasksCount();
+        return "Alright then! I've added the task to your list:" + "\n\t" + task.toString() + viewTasksCount();
 
     }
 
