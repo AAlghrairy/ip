@@ -22,23 +22,29 @@ public class Duke {
 
         while (!userInput.equals("bye")) {
             userInput = sc.nextLine();
-            String message = processMessage(userInput);
-            if (message == null) {
-                break;
-            } else {
-                System.out.println(message);
+
+            try {
+                String message = processMessage(userInput);
+
+                if (message == null) {
+                    break;
+                } else {
+                    System.out.println(message);
+                }
+            } catch (DukeException e) {
+                System.out.println(DIVIDER + e.getMessage() + DIVIDER);
             }
         }
 
         System.out.println(DIVIDER + "Farewell then!" + DIVIDER);
     }
 
-    private static String processMessage(String message) {
+    private static String processMessage(String message) throws DukeException {
         String currMessage;
         Task currTask;
         int index;
 
-        if (message.toLowerCase().equals("bye")) {
+        if (message.equalsIgnoreCase("bye")) {
             return null;
         }
 
@@ -63,17 +69,18 @@ public class Duke {
             currTask = tasks.get(index);
             currTask.markDone();
 
-            message = "Alright then! I've marked that task as done:" + "\n\t" + currTask.toString();
+            message = "Alright then! I've marked that task as done:" + "\n\t" + currTask;
             break;
         case "unmark":
             index = getIndexFromMessage(message); //get the index
             currTask = tasks.get(index);
             currTask.markUndone();
 
-            message = "Alright then! I've marked that task as not done:" + "\n\t" + currTask.toString();
+            message = "Alright then! I've marked that task as not done:" + "\n\t" + currTask;
             break;
         case "todo":
-            currTask = new Todo(message.substring(message.indexOf(" ") + 1));
+            currTask = new Todo(retrieveMessageTodo(message));
+
             tasks.add(currTask);
             message = confirmAddition(currTask);
             break;
@@ -88,21 +95,42 @@ public class Duke {
             message = confirmAddition(currTask);
             break;
         default:
-            //echoes the message
+            throw new DukeException("Pardon me, but I did not understand what you said.");
         }
-
         return DIVIDER + message + DIVIDER;
     }
 
     private static int getIndexFromMessage(String message) {
         return Integer.parseInt(message.substring(message.indexOf(" ") + 1)) - 1;
     }
-    private static String retrieveMessage(String message) {
+
+    private static String retrieveMessageTodo(String message) throws DukeException {
+        int index = message.indexOf(" ");
+
+        if (index == -1) {
+            throw new DukeException("Pardon me, but the description of a todo cannot be empty.");
+        }
+        return message.substring(message.indexOf(" ") + 1);
+    }
+
+    private static String retrieveMessage(String message) throws DukeException {
+        int indexOfSpace = message.indexOf(" ");
+        int indexOfSlash = message.indexOf("/");
+
+        if (indexOfSpace == -1) {
+            throw new DukeException("Pardon me, but the description of a deadline/event cannot be empty.");
+        } else if (indexOfSlash == -1) {
+            throw new DukeException("Pardon me, but the format is incorrect. The format should be:\n\t" +
+                    "[Task] [Description] /[by\\at] [date\\time]");
+        }
         return message.substring(message.indexOf(" ") + 1, message.indexOf("/") - 1);
     }
 
-    private static String retrieveDateAndTime(String time) {
-        return time.substring(time.indexOf("/") + 4);
+    private static String retrieveDateAndTime(String message) throws DukeException {
+        if (message.substring(message.indexOf("/")).length() < 4) {
+            throw new DukeException("Pardon me, but the date/time cannot be empty.");
+        }
+        return message.substring(message.indexOf("/") + 4);
     }
 
     private static String confirmAddition(Task task) {
