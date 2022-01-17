@@ -85,23 +85,23 @@ public class Duke {
         case "delete":
             index = getIndexFromMessage(message);
 
-            message = confirmDeletion(tasks.remove(index));
+            message = confirmAction(tasks.remove(index), ConfirmCodes.DELETION);
             break;
         case "todo":
             currTask = new Todo(retrieveMessageTodo(message));
 
             tasks.add(currTask);
-            message = confirmAddition(currTask);
+            message = confirmAction(currTask, ConfirmCodes.ADDITION);
             break;
         case "deadline":
             currTask = new Deadline(retrieveMessage(message), retrieveDateAndTime(message));
             tasks.add(currTask);
-            message = confirmAddition(currTask);
+            message = confirmAction(currTask, ConfirmCodes.ADDITION);
             break;
         case "event":
             currTask = new Event(retrieveMessage(message), retrieveDateAndTime(message));
             tasks.add(currTask);
-            message = confirmAddition(currTask);
+            message = confirmAction(currTask, ConfirmCodes.ADDITION);
             break;
         default:
             throw new DukeException("Pardon me, but I did not understand what you said.");
@@ -124,7 +124,7 @@ public class Duke {
         }
 
         try {
-            tasks.get(indexOfItem);
+            tasks.get(indexOfItem); //used to see if index is out of bounds
         } catch (IndexOutOfBoundsException e) {
             throw new DukeException("Pardon me, but the provided index does not exist in your list.");
         }
@@ -160,13 +160,16 @@ public class Duke {
         return message.substring(message.indexOf("/") + 4);
     }
 
-    private static String confirmAddition(Task task) {
-        return "Alright then! I've added the task to your list:" + "\n\t" + task.toString() + viewTasksCount();
-    }
-
-    private static String confirmDeletion(Task task) {
-        return "As you wish. I've removed the task from your list:" + "\n\t" + task.toString()
-                + "\nI hope it was nothing important..." + viewTasksCount();
+    private static String confirmAction(Task task, ConfirmCodes code) {
+        switch (code) {
+        case ADDITION:
+            return "Alright then! I've added the task to your list:" + "\n\t" + task.toString() + viewTasksCount();
+        case DELETION:
+            return "As you wish. I've removed the task from your list:" + "\n\t" + task.toString()
+                    + "\nI hope it was nothing important..." + viewTasksCount();
+        default:
+            return "FILLER MESSAGE HERE";
+        }
     }
 
     private static String viewTasksCount() {
